@@ -1,13 +1,14 @@
 package ru.shapovalov.chat.singleton;
 
-import com.sun.jmx.remote.internal.ArrayQueue;
+import ru.shapovalov.chat.dao.Message;
 
-import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class Messages {
-    public static List<String> messageList;
+    public Queue<Message> messageList;
     private Messages(){
-        messageList = new ArrayQueue<>(30);
+        messageList = new ConcurrentLinkedQueue<>();
     }
     private static volatile Messages instance;
 

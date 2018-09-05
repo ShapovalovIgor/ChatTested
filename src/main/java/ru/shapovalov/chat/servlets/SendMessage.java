@@ -1,8 +1,7 @@
 package ru.shapovalov.chat.servlets;
 
-import ru.shapovalov.chat.dao.User;
+import ru.shapovalov.chat.dao.Message;
 import ru.shapovalov.chat.singleton.Messages;
-import ru.shapovalov.chat.singleton.Users;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -13,8 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Map;
 
-@WebServlet("/chat")
-public class ChatLogic extends HttpServlet {
+@WebServlet("/sendMessage")
+public class SendMessage extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -26,23 +25,15 @@ public class ChatLogic extends HttpServlet {
         Map<String,String[]> param = request.getParameterMap();
         String name = param.get("userName")[0];
         String color = param.get("userColor")[0];
-        Users users = Users.getInstance();
-        boolean checkUser = true;
-        for (User user :users.userList)
-            if(user.getName().equals(name))
-                checkUser = false;
-        if(checkUser) {
-            User user = new User(name, color);
-            users.userList.add(user);
-        }
-        Messages messages = Messages.getInstance();
-        String nameChat = "Chat";
-        request.setAttribute("nameChat", nameChat);
+        String messageStr = param.get("message")[0];
+        Message message = new Message(name, color, messageStr);
         request.setAttribute("name", name);
         request.setAttribute("color", color);
-        request.setAttribute("userList",  users.userList);
-        request.setAttribute("messageList",  messages.messageList);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/chatView.jsp");
+        request.setAttribute("message", message);
+        Messages messages = Messages.getInstance();
+        messages.messageList.add(message);
+        request.getRequestURI();
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/goToLogic.jsp");
         dispatcher.forward(request, response);
     }
 }

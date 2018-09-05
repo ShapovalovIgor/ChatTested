@@ -1,13 +1,14 @@
 package ru.shapovalov.chat.singleton;
 
-import com.sun.jmx.remote.internal.ArrayQueue;
+import ru.shapovalov.chat.dao.User;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Users {
-    public static List<Users> userList;
+    public List<User> userList;
     private Users(){
-        userList = new ArrayQueue<>(30);
+        userList = new ArrayList<>();
     }
     private static volatile Users instance;
 
